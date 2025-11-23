@@ -1,0 +1,75 @@
+import React, { useState } from 'react'
+import AdminSidebar from '../components/AdminSidebar'
+
+const defaultMatrix = {
+  ADMIN: { READ: true, WRITE: true, APPROVE: true, DELETE: true },
+  FARMER: { READ: true, WRITE: true, APPROVE: false, DELETE: false },
+  BUYER: { READ: true, WRITE: false, APPROVE: false, DELETE: false },
+  DRIVER: { READ: true, WRITE: false, APPROVE: false, DELETE: false },
+}
+
+const perms = ['READ', 'WRITE', 'APPROVE', 'DELETE']
+const roles = Object.keys(defaultMatrix)
+
+const AdminRoles = () => {
+  const [matrix, setMatrix] = useState(defaultMatrix)
+
+  const toggle = (role, perm) => {
+    setMatrix(prev => ({ ...prev, [role]: { ...prev[role], [perm]: !prev[role][perm] } }))
+  }
+
+  return (
+    <div className='min-h-screen bg-gray-50'>
+      <div className='max-w-none mx-0 w-full px-8 py-6'>
+        {/* Top bar */}
+        <div className='flex items-center justify-between mb-6'>
+          <h1 className='text-3xl font-semibold ml-2'>Roles & Permissions</h1>
+          <div />
+        </div>
+
+        <div className='grid grid-cols-[240px,1fr] gap-6'>
+          {/* Sidebar */}
+          <AdminSidebar activePage="users" />
+
+          {/* Main content */}
+          <div className='space-y-6'>
+            <div className='bg-white rounded-xl shadow-sm border border-gray-200 p-4'>
+              <h1 className='text-2xl font-semibold mb-4'>Roles & Permissions</h1>
+              <div className='card overflow-x-auto'>
+                <table className='min-w-full text-sm'>
+                  <thead>
+                    <tr className='text-left text-gray-500'>
+                      <th className='py-3 pr-4 font-normal'>Role</th>
+                      {perms.map(p => <th key={p} className='py-3 pr-4 font-normal'>{p}</th>)}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {roles.map(role => (
+                      <tr key={role} className='border-t'>
+                        <td className='py-3 pr-4 font-medium'>{role}</td>
+                        {perms.map(p => (
+                          <td key={p} className='py-3 pr-4'>
+                            <label className='inline-flex items-center gap-2'>
+                              <input type='checkbox' checked={!!matrix[role][p]} onChange={() => toggle(role, p)} />
+                            </label>
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div className='mt-4'>
+                <button className='btn-primary'>Save Changes</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default AdminRoles
+
+
