@@ -1,0 +1,1 @@
+# Smart-Agricultural-Trading-Management-System
